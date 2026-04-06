@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Shine Estética Automotiva</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #000, #111);
+    color: white;
+}
+
+header {
+    text-align: center;
+    padding: 25px;
+    background: black;
+    color: gold;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: #111;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+h2 {
+    color: gold;
+}
+
+button {
+    background: gold;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 10px;
+    border: none;
+}
+
+.badge {
+    background: gold;
+    color: black;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>🚗 Black Shine Estética Automotiva</header>
+
+<div class="container">
+
+<h2>💰 Serviços</h2>
+
+<div class="card">
+<b>Básico - R$30</b> <span class="badge">30 min</span><br>
+Lavagem externa + pneus
+</div>
+
+<div class="card">
+<b>Completo - R$50</b> <span class="badge">1h</span><br>
+Externa + interna + cheirinho
+</div>
+
+<div class="card">
+<b>Premium - R$80</b> <span class="badge">2h</span><br>
+Completo + cera + detalhamento
+</div>
+
+<h2>📅 Agendar (somente sáb, dom e feriados)</h2>
+
+<div class="card">
+<input type="text" id="nome" placeholder="Seu nome">
+<input type="text" id="carro" placeholder="Carro (ex: Civic G9)">
+
+<select id="tipo">
+<option value="Básico">Básico - 30min</option>
+<option value="Completo">Completo - 1h</option>
+<option value="Premium">Premium - 2h</option>
+</select>
+
+<select id="dia">
+<option>Sábado</option>
+<option>Domingo</option>
+<option>Feriado</option>
+</select>
+
+<select id="hora">
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+<option>16:00</option>
+<option>17:00</option>
+</select>
+
+<button onclick="agendar()">Agendar</button>
+</div>
+
+<h2>📋 Agendamentos</h2>
+<div id="lista"></div>
+
+</div>
+
+<script>
+
+let agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+function salvar() {
+    localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+}
+
+function agendar() {
+    let nome = document.getElementById("nome").value;
+    let carro = document.getElementById("carro").value;
+    let tipo = document.getElementById("tipo").value;
+    let dia = document.getElementById("dia").value;
+    let hora = document.getElementById("hora").value;
+
+    if (!nome || !carro) {
+        alert("Preencha tudo!");
+        return;
+    }
+
+    let novo = { nome, carro, tipo, dia, hora, status: "Pendente" };
+    agendamentos.push(novo);
+
+    salvar();
+    mostrar();
+
+    // Notificação simples
+    alert("Novo agendamento recebido!");
+}
+
+function mostrar() {
+    let lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    agendamentos.forEach((a, i) => {
+        lista.innerHTML += `
+        <div class="card">
+        <b>${a.nome}</b><br>
+        ${a.carro}<br>
+        ${a.tipo}<br>
+        ${a.dia} - ${a.hora}<br>
+        Status: ${a.status}<br>
+        <button onclick="concluir(${i})">✔ Concluído</button>
+        <button onclick="remover(${i})">❌ Cancelar</button>
+        </div>
+        `;
+    });
+}
+
+function concluir(i) {
+    agendamentos[i].status = "Concluído";
+    salvar();
+    mostrar();
+}
+
+function remover(i) {
+    agendamentos.splice(i, 1);
+    salvar();
+    mostrar();
+}
+
+mostrar();
+
+</script>
+
+</body>
+</html>
